@@ -1,0 +1,124 @@
+﻿@model List<NikeFarms.v2._0.Models.ViewModels.ListUserVM>
+@{ ViewBag.Title = "List of Users"; }
+@if (ViewBag.Role == "Admin")
+{
+    Layout = "_AdminDashboard";
+}
+else
+{
+    Layout = "_SuperAdminDashboard";
+}
+
+<br />
+<h1 class="text-center"><i class="fas fa-users"></i>   Manage <great style="color:red">D</great> Managers</h1>
+
+<div class="card">
+    <div>
+        <br />
+        <a class="btn font-weight-bold ml-4" asp-controller="SuperAdmin" asp-action="RegisterUser" style="background-color:darkgoldenrod"><i class="fas fa-plus"></i> Add Users</a>
+        @if (Model.Count() > 0)
+        {
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Profile</th>
+                            <th>Full Name</th>
+                            <th>Email Address </th>
+                            <th>Phone No</th>
+                            <th>Gender</th>
+                            <th>Role</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            string modalId = $"exampleModalCenter{user.UserId}";
+                            string modalIdHash = $"#exampleModalCenter{user.UserId}";
+                            <tr>
+                                <td> <i class="fas fa-user-circle ml-3" style="font-size: 50px; color:grey"></i> </td>
+                                <td>@user.FullName  @if (user.IsActive == true) {<a class="btn btn-round font-weight-bold float-right" style="border-color:greenyellow; font-size:10px">active</a> } else { <a class="btn btn-round font-weight-bold float-right" style="border-color: red; font-size: 10px">disabled</a> } </td>
+                                <td>@user.Email</td>
+                                <td>@user.PhoneNo</td>
+                                <td>@user.Gender</td>
+                                <td>@user.RoleName</td>
+                                
+                            <td>
+                                <a class="btn font-weight-bold" asp-action="UpdateUser" asp-route-id="@user.UserId" style="background-color:greenyellow; color:white">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                @if (user.IsActive == true)
+                                {
+                                    <a class="btn btn-outline-danger font-weight-bold" style="color:red" data-toggle="modal" data-target=@modalIdHash>
+                                        <i class="fas fa-user-times"></i>
+                                    </a>
+
+
+                                    <div class="modal fade" id=@modalId tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title font-weight-bolder" style="color:red" id="exampleModalLongTitle">Disable User <i class="fas fa-user-times"></i> </h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <br /> <span class="font-weight-bolder text-center">Are you sure you want to <span class="font-weight-bolder" style="color:red">DISABLE</span> <span style="color:darkred">@user.RoleName @user.FullName?</span></span>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn font-weight-bold" style="background-color:red; color:white" asp-action="ActivateOrDeactivate" asp-route-id="@user.UserId">Yes</a>
+                                                    <a class="btn font-weight-bold" style="background-color:greenyellow; color:white" data-dismiss="modal">No</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-success font-weight-bold" style="color:greenyellow"  data-toggle="modal" data-target=@modalIdHash>
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+
+
+                                    <div class="modal fade" id=@modalId tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title font-weight-bolder" style="color:greenyellow" id="exampleModalLongTitle">Activate User <i class="fas fa-user-plus"></i> </h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <br /> <span class="font-weight-bolder text-center">Are you sure you want to <span style="color:greenyellow">ACTIVATE</span> <span style="color:darkred">@user.RoleName @user.FullName?</span></span>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn font-weight-bold" style="background-color:red; color:white" asp-action="ActivateOrDeactivate" asp-route-id="@user.UserId">Yes</a>
+                                                    <a class="btn font-weight-bold" style="background-color:greenyellow; color:white" data-dismiss="modal">No</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </td>
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <br /><br />
+            <h4 class="text-center font-weight-bolder" style="color:red">No User has been Added! </h4>
+        }
+    </div>
+</div>

@@ -1,0 +1,107 @@
+﻿@model PaginatedList<NikeFarms.v2._0.Models.ViewModels.ListSalesVM>
+@{ ViewBag.Title = "Sales"; }
+@{
+
+    Layout = "_AdminDashboard";
+}
+
+<br />
+<h1 class="text-center" style="color:darkred"><i class="fas fa-clipboard"></i>  Sales </h1>
+<br />
+
+<div class="card">
+    <div>
+        <br />
+
+        @if (Model.Count() > 0)
+        {
+            <div class="card-body">
+                <table class="table table-bordered ">
+                    <thead>
+                        <tr>
+                            <th> Description </th>
+                            <th> Total Price (&#8358 ) </th>
+                            <th>Sold By</th>
+                            <th>Date <span style="color:red">&</span> Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sale in Model)
+                        {
+
+                            <tr>
+
+
+                                <td class="font-weight-bolder">
+                                    <span style="color:red">*</span> <a asp-controller="SalesItem" asp-action="Index" asp-route-id="@sale.Id">@sale.Item</a>
+
+                                </td>
+                                @if (sale.TotalPrice == null)
+                                {
+                                    <td class="font-weight-bold" style="color:red">Null</td>
+                                }
+                                else
+                                {
+                                    <td><span class="comma">@sale.TotalPrice</span></td>
+                                }
+
+                                @if (sale.CreatedBy == ViewBag.UserName)
+                                {
+                                    <td class="font-weight-bold" style="color:darkred">You</td>
+                                }
+                                else
+                                {
+                                    <td>@sale.CreatedBy (Sales)</td>
+                                }
+
+                                <td class="font-weight-bold">@sale.CreatedAt</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <br /><br />
+            <h4 class="text-center font-weight-bolder" style="color:darkred"> This Customer has not Purchased any goods from this Farm! </h4>
+        }
+    </div>
+</div>
+
+<script>
+
+    function numberWithCommas(x) {
+        let newNumber = x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        return newNumber
+    }
+
+
+    let comma = document.getElementsByClassName("comma");
+
+
+    for (var i = 0; i < comma.length; i++) {
+        let result = numberWithCommas(comma[i].innerHTML);
+        document.getElementsByClassName("comma")[i].innerHTML = result;
+    }
+
+
+</script>
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="SalesPerCustomer"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="SalesPerCustomer"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

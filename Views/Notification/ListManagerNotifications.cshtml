@@ -1,0 +1,75 @@
+﻿@model List<NikeFarms.v2._0.Models.ViewModels.ListNotificationVM>
+@{ ViewBag.Title = "Notifications"; }
+@{
+    Layout = "_FarmManagerDashboard";
+}
+
+
+<h1 class="text-center" style="font-family:'Times New Roman'; color:darkred ">
+    <i class="fas fa-bell"></i> Notifications (<span style="color:red">@ViewBag.NotifyCount</span>)
+</h1>
+
+<div class="">
+    <div>
+        <br />
+        @if (Model.Count() > 0)
+        {
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+
+                            <th>Content</th>
+                            <th>Approve</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var notification in Model)
+                        {
+                            string modalId = $"exampleModalCenter{notification.Id}";
+                            string modalIdHash = $"#exampleModalCenter{notification.Id}";
+                            <tr>
+
+
+                                <td><span class="font-weight-bolder">@notification.Content </span><br /> <span class="font-italic font-weight-bolder" style="font-size:15px;color: darkred; margin-left:60%">@notification.CreatedAt.ToLongDateString() @notification.CreatedAt.ToShortTimeString()</span></td>
+
+                                <td>
+                                    <a class="btn font-weight-bold" data-toggle="modal" data-target=@modalIdHash style="background-color: greenyellow; color: white; margin-left: 20%; border-radius: 60%"><i class="fas fa-check"></i></a>
+                                    <div class="modal fade" id=@modalId tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title font-weight-bolder" style="color:greenyellow" id="exampleModalLongTitle">Approval <i class="fas fa-check"></i> </h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <br /> <span class="font-weight-bolder text-center">Are you sure you want to approve this Notification ?</span>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn font-weight-bold" style="background-color:greenyellow; color:white" asp-controller="Notification" asp-action="Approve" asp-route-id="@notification.ApproveId"><i class="fas fa-check"></i> Yes</a>
+                                                    <a class="btn font-weight-bold" style="background-color:red; color:white" data-dismiss="modal"><i></i> No</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <br /><br />
+            <h4 class="text-center font-weight-bolder" style="color: darkred">You Have No Notifications So Far...</h4>
+        }
+    </div>
+</div>
+
+
